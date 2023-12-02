@@ -1,30 +1,28 @@
-const city_name = document.getElementById("city_name");
-const cityName = document.getElementById("cityName");
-const submitBtn = document.getElementById("submitBtn");
-const temp_real_val = document.getElementById("temp_real_val");
+const city_name = document.getElementById('city_name');
+const cityName = document.getElementById('cityName');
+const submitBtn = document.getElementById('submitBtn');
+const temp_real_val = document.getElementById('temp');
 
-const temp_status = document.getElementById("temp_status");
-
-const getInfo = async (event) => 
-{
+const temp_status = document.getElementById('temp_status');
+const datahide = document.querySelector('.middle_layer');
+const getInfo = async(event) => {
     event.preventDefault();
     let cityVal = cityName.value;
-    if(cityVal == "")
-    {
-        city_name.innerText = `please write the name before search `;
-    }
-    else
-    {
-        try
-        {
-            let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityVal}&appid=67018f9a008ddff9a7505fd1e228848e`;
+    if(cityVal === ""){
+        city_name.innerText = `please write the name before search`;
+        datahide.classList.add('data_hide');
+    }else{
+        try{
+            let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityVal}&units=metric&appid=67018f9a008ddff9a7505fd1e228848e`;
             const response = await fetch(url);
             const data = await response.json();
             const arrData = [data];
-            cityName.innerText = `${arrData[0].name}, ${arrData[0].sys.country}`;
+            city_name.innerText = `${arrData[0].name}, ${arrData[0].sys.country}`;
+            // console.log(`${arrData[0].name}, ${arrData[0].sys.country}`);
+            // console.log(arrData[0].main.temp);
+            // console.log(arrData[0].weather[0].main);
             temp_real_val.innerText = arrData[0].main.temp;
-            temp_status.innerText = arrData[0].weather[0].main;
-            
+            const tempMood = arrData[0].weather[0].main;
             if(tempMood == "clear")
             {
                 temp_status.innerHTML = "<i class='fas fa-sun' style = 'color: #eccc68;'></i>";
@@ -41,13 +39,12 @@ const getInfo = async (event) =>
             {
                temp_status.innerHTML = "<i class='fas fa-sun' style = 'color: #eccc68;'></i>";
             }
-            datahife.classlist.remove("data_hide");
-        }
-        catch
-        {
+            datahide.classlist.remove("data_hide");
+        }catch{
             city_name.innerText = `please enter the city name properly`;
+            datahide.classList.add('data_hide');
         }
     }
 }
 
-submitBtn.addEventListener("click",getInfo);
+submitBtn.addEventListener('click',getInfo);
